@@ -1,15 +1,12 @@
 import React from 'react';
-import {Link} from 'react-router-dom'
+import Header from './Header';
 
 
 const BaseLayout = (props) => {
   return (
     <>
     
-        <ul>
-            <li><Link to="/"/>Home</li>
-            <li><Link to="/cart"/>Home</li>
-        </ul>
+        <Header />
 
       {props.children}
     </>
