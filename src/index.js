@@ -1,66 +1,78 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client'
 import { Provider } from 'react-redux'
-import env from "react-dotenv";
 
-import { combineReducers } from 'redux'
+// import { combineReducers } from 'redux'
 import { configureStore } from '@reduxjs/toolkit'
-import { persistStore, persistReducer } from 'redux-persist'
-import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
-import storageSession from 'redux-persist/lib/storage/session'
-import { PersistGate } from 'redux-persist/integration/react'
+// import { persistStore } from 'redux-persist'
+// import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
+// import storageSession from 'redux-persist/lib/storage/session'
+// import { PersistGate } from 'redux-persist/integration/react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import thunk from 'redux-thunk';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './components/styles/index.css'
+import { Auth0Provider } from "@auth0/auth0-react";
 
 import BaseLayout from './components/layout/BaseLayout';
-import CoinsReducer from './components/reducers/CoinsReducer';
+import CoinsReducer from './reducers/CoinReducer';
 
-import App from './App';
+import App from './components/App';
 import About from './components/About';
-import UserReducer from './components/reducers/UserReducer';
+import ExchangeReducer from './reducers/ExchangeReducer';
+import CoinList from './components/CoinList';
 
-// Local storage config
-const localConfig = {
-  key: 'root',
-  storage,
-}
+// // Local storage config
+// const localConfig = {
+//   key: 'root',
+//   storage,
+// }
 
-// Session storage config
-const sessionConfig = {
-  key: 'user',
-  storage: storageSession,
-}
+// // Session storage config
+// const sessionConfig = {
+//   key: 'user',
+//   storage: storageSession,
+// }
 
-const rootReducer = combineReducers({
-  user: persistReducer(sessionConfig, UserReducer),
-  coins: CoinsReducer
-})
+// const rootReducer = combineReducers({
+//   user: persistReducer(localConfig, UserReducer),
+//   coins: CoinsReducer
+// })
 
-const persistedReducer = persistReducer(localConfig, rootReducer)
+// const persistedReducer = persistReducer(sessionConfig, rootReducer)
 
 const store = configureStore({
-  reducer: persistedReducer,
+  reducer: {
+    coins: CoinsReducer,
+    exchanges: ExchangeReducer
+  },
   middleware: [thunk]
 })
 
-let persistor = persistStore(store)
+// let persistor = persistStore(store)
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+
     <Provider store={store}>
-      <PersistGate persistor={persistor} loading={null}>
-      <Router>
-        <BaseLayout>
-          <Routes>
-            <Route path="/" element={<App />}/>
-            <Route path="/about" element={<About />}/>
-            
-          </Routes>
-        </BaseLayout>
-      </Router>
-    </PersistGate>
+      <Auth0Provider domain="dev-3j62jc38.us.auth0.com" clientId="kOfMzkpDU8RnrJVMI6KRLBRkc221WKg8" redirectUri={window.location.origin} >
+        {/* <PersistGate persistor={persistor} loading={null}> */}
+          <Router>
+            <BaseLayout>
+              <Routes>
+
+                <Route path="/" element={<App />}/>
+                <Route path="/about" element={<About />}/>
+                <Route path="/list" element={<CoinList />}/>
+
+              </Routes>
+            </BaseLayout>
+          </Router>
+        {/* </PersistGate> */}
+      </Auth0Provider>
     </Provider>
+
   </React.StrictMode>,
 );

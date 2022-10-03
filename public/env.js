@@ -60,5 +60,6 @@ window.env = {
   "npm_node_execpath": "/usr/local/bin/node",
   "npm_config_prefix": "/usr/local",
   "COLORTERM": "truecolor",
-  "API_KEY": "44A8EA5B-26D6-4181-9072-2D178CF0F3DB"
+  "API_KEY": "1CCDB058-888F-4D57-8A8D-C390DAA61BAF",
+  "API_URL": "https://rest.coinapi.io/v1"
 };
