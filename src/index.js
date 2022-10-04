@@ -13,7 +13,6 @@ import thunk from 'redux-thunk';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './components/styles/index.css'
-import { Auth0Provider } from "@auth0/auth0-react";
 
 import BaseLayout from './components/layout/BaseLayout';
 import CoinsReducer from './reducers/CoinReducer';
@@ -57,7 +56,6 @@ root.render(
   <React.StrictMode>
 
     <Provider store={store}>
-      <Auth0Provider domain="dev-3j62jc38.us.auth0.com" clientId="kOfMzkpDU8RnrJVMI6KRLBRkc221WKg8" redirectUri={window.location.origin} >
         {/* <PersistGate persistor={persistor} loading={null}> */}
           <Router>
             <BaseLayout>
@@ -71,7 +69,6 @@ root.render(
             </BaseLayout>
           </Router>
         {/* </PersistGate> */}
-      </Auth0Provider>
     </Provider>
 
   </React.StrictMode>,

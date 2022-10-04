@@ -2,11 +2,8 @@
 import React from 'react'
 import { Container, Nav, Navbar } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap'
-import { useAuth0 } from "@auth0/auth0-react";
 
 const Header = () => {
-
-  const { user, loginWithRedirect, isAuthenticated, logout, isLoading } = useAuth0();
 
   return (
     <>
@@ -30,14 +27,6 @@ const Header = () => {
             <LinkContainer to="/list">
               <Nav.Link>Coins</Nav.Link>
             </LinkContainer>
-
-            {isAuthenticated && !isLoading ?
-              <button onClick={() => logout({ returnTo: window.location.origin })}>Log Out</button>
-              :
-              <button onClick={() => loginWithRedirect()}>
-                Log In
-              </button>
-            }
 
           </Nav>
         </Container>

@@ -9,8 +9,10 @@ import CoinItem from './CoinItem';
 import ErrorBoundary from './ErrorBoundary';
 import coinList from '../data/coinData.json'
 import { updateCoins } from '../reducers/CoinReducer';
-import MyPagination from './layout/MyPagination';
 
+export function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 
 function CoinList() {
 
@@ -63,7 +65,6 @@ function CoinList() {
 
     <ErrorBoundary>
         <CoinItem coins={currentCoins} loading={loading}/>
-        <MyPagination postsPerPage={coinsPerPage} totalPosts={coins.length} paginate={paginate}/>
     </ErrorBoundary>
 
     </>
