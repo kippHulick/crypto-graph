@@ -17,16 +17,16 @@ const Header = () => {
           <Nav className="me-auto">
 
             <LinkContainer to="/">
-              <Nav.Link>home</Nav.Link>
+              <Nav.Link>Home</Nav.Link>
             </LinkContainer>
 
-            <LinkContainer to="/about">
+            <LinkContainer to="/">
+              <Nav.Link>Comparison</Nav.Link>
+            </LinkContainer>
+
+            {/* <LinkContainer to="/about">
               <Nav.Link>About</Nav.Link>
-            </LinkContainer>
-
-            <LinkContainer to="/list">
-              <Nav.Link>Coins</Nav.Link>
-            </LinkContainer>
+            </LinkContainer> */}
 
           </Nav>
         </Container>

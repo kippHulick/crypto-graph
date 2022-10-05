@@ -1,32 +1,136 @@
-import React from 'react'
-import { ListGroup } from 'react-bootstrap';
-import coinIcons from '../data/coinIcons.json'
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { SingleCoin } from '../config/api'
+import DOMPurify from 'dompurify'
+import './styles/coinItem.css'
+import CoinChart from './CoinChart'
+import { Button, Spinner } from 'react-bootstrap'
+import { numberWithCommas } from './CoinTable'
+import ErrorBoundary from './ErrorBoundary'
 
-function CoinItem({coins, loading}) {
-    if(loading){
-        return <h2>Loading</h2>
-    }
+function CoinItem(props) {
+    const { id } = useParams();
+    const [coin, setCoin] = useState({})
+    const [loading, setLoading] = useState(true)
+    const [days, setDays] = useState(1)
+
+    useEffect(() => {
+        setLoading(true)
+        const fetchCoin = async () => {
+            try {
+                const data = await fetch(SingleCoin(id)).then(res => res.json())
+                setCoin(data)
+                setLoading(false)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        fetchCoin()
+
+        return setCoin({})
+    }, [id])
+
   return (
-    <ListGroup>
-        {coins.map(coinObj => {
-            let coinIcon = coinIcons.filter(coin => coin.asset_id === coinObj.asset_id)
-            return <ListGroup.Item key={coinObj.asset_id} className="d-flex justify-content-between align-items-start">
-                <div className="ms-2 me-auto">
-                    <div className="fw-bold">{coinObj.name}</div>
-                    Asset Id: {coinObj.asset_id}
-
-                    <img src={coinIcon.url} alt=''></img>
-
+    <>
+    {loading ? (
+        <Spinner animation='border' style={{ position: "fixed", top: "50%", left: "50%" }}/>
+    ): (
+        <div>
+        <div className='coin-container'>
+            <div className='content'>
+                <h1 className='text-center'>{coin.name}</h1>
+            </div>
+            <div className='content'>
+                <div className='rank'>
+                    <span className='rank-btn'>Rank # {coin.market_cap_rank}</span>
                 </div>
+                <div className='info'>
+                    <div className='coin-heading'>
+                        {coin.image ? <img src={coin.image.small} alt='' /> : null}
+                        <p>{coin.name}</p>
+                        {coin.symbol ? <p>{coin.symbol.toUpperCase()}/USD</p> : null}
+                        
+                    </div>
+                    <div className='coin-price'>
+                        {coin.market_data?.current_price ? <h1>${coin.market_data.current_price.usd.toLocaleString()}</h1> : null}
+                    </div>
+                </div>
+            </div>
+
+            <div className='content'>
+                {coin ? (
                 <div>
-                    <p>One Hour Volume: ${coinObj.volume_1hrs_usd}</p>
-                    {coinObj.price_usd ? <p>Current Price: ${coinObj.price_usd}</p> : <></>}
-                    
+                    <ErrorBoundary>
+                        <CoinChart coin={coin} days={days}/>
+                    </ErrorBoundary>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th><Button variant="outline-secondary" onClick={e => setDays(1)}>24h</Button></th>
+                                <th><Button variant="outline-secondary" onClick={e => setDays(7)}>7d</Button></th>
+                                <th><Button variant="outline-secondary" onClick={e => setDays(14)}>14d</Button></th>
+                                <th><Button variant="outline-secondary" onClick={e => setDays(30)}>30d</Button></th>
+                                <th><Button variant="outline-secondary" onClick={e => setDays(365)}>1yr</Button></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{coin.market_data?.price_change_percentage_24h_in_currency ? <p>{coin.market_data.price_change_percentage_24h_in_currency.usd.toFixed(1)}%</p> : null}</td>
+                                <td>{coin.market_data?.price_change_percentage_24h_in_currency ? <p>{coin.market_data.price_change_percentage_7d_in_currency.usd.toFixed(1)}%</p> : null}</td>
+                                <td>{coin.market_data?.price_change_percentage_24h_in_currency ? <p>{coin.market_data.price_change_percentage_14d_in_currency.usd.toFixed(1)}%</p> : null}</td>
+                                <td>{coin.market_data?.price_change_percentage_24h_in_currency ? <p>{coin.market_data.price_change_percentage_30d_in_currency.usd.toFixed(1)}%</p> : null}</td>
+                                <td>{coin.market_data?.price_change_percentage_24h_in_currency ? <p>{coin.market_data.price_change_percentage_1y_in_currency.usd.toFixed(1)}%</p> : null}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-            </ListGroup.Item>
-        })}
-    </ListGroup>
-  )
+                ) : <></>}
+
+            </div>
+            <div className='content'>
+                <div className='stats'>
+                    <div className='left'>
+                        <div className='row'>
+                            <h4>24 Hour Low</h4>
+                            {coin.market_data?.low_24h ? <p>${coin.market_data.low_24h.usd.toLocaleString()}</p> : null}
+                        </div>
+                        <div className='row'>
+                            <h4>24 Hour High</h4>
+                            {coin.market_data?.high_24h ? <p>${coin.market_data.high_24h.usd.toLocaleString()}</p> : null}                            
+                        </div>
+
+                    </div>
+                    <div className='right'>
+                        <div className='row'>
+                            <h4>Market Cap</h4>
+                            {coin.market_data?.market_cap ? <p>${coin.market_data.market_cap.usd.toLocaleString()}</p> : null}
+                        </div>
+                        <div className='row'>
+                            <h4>Circulating Supply</h4>
+                            {coin.market_data ? <p>{numberWithCommas(coin.market_data.circulating_supply)}</p> : null}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div className='content'>
+                <div className='about'>
+                    <h3>About</h3>
+                    <p dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(coin.description ? coin.description.en : ''),
+                    }}>
+                    </p>
+
+                </div>
+            </div>
+
+        </div>
+    </div>)}
+    </>
+    
+    )
+
 }
 
 export default CoinItem

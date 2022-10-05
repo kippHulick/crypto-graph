@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import AliceCarousel from 'react-alice-carousel'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { TrendingCoins } from '../../config/api'
-import { numberWithCommas } from '../CoinList'
+import { numberWithCommas } from '../CoinTable'
 import 'react-alice-carousel/lib/alice-carousel.css'
 
 function Carousel() {
 
+    const navigate = useNavigate()
     const [trending, setTrending] = useState([])
 
     useEffect(() => {
         const fetchTrending = async () => {
-            let data = await fetch(TrendingCoins()).then(res => res.json())
-            console.log(data)
-            setTrending(data)
+            try {
+                let data = await fetch(TrendingCoins()).then(res => res.json())
+                setTrending(data)
+            } catch (error) {
+                console.log(error)
+            }
         }
 
         fetchTrending()
@@ -23,7 +27,7 @@ function Carousel() {
         let profit = coin?.price_change_percentage_24h >= 0
         return (
 
-        <Link style={{
+        <div onClick={()=>navigate(`/coins/${coin.id}`)} style={{
             color: 'black',
             display: 'flex',
             flexDirection: 'column',
@@ -52,9 +56,9 @@ function Carousel() {
                 </span>
             </span>
             <span>
-                $ {numberWithCommas(coin?.current_price.toFixed(2))}
+                ${numberWithCommas(coin?.current_price.toFixed(2))}
             </span>
-        </Link>
+        </div>
 
         )
     })

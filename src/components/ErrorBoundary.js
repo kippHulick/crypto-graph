@@ -19,7 +19,7 @@ export default class ErrorBoundary extends React.Component {
     render() {
       if (this.state.hasError) {
         // You can render any custom fallback UI
-        return <p>Something went wrong.</p>;
+        return <p className='text-center'>Chart failed to load, try waiting a few seconds and refreshing the page</p>;
       }
   
       return this.props.children; 

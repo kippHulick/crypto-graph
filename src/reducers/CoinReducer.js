@@ -9,8 +9,8 @@ const coins = createSlice({
     initialState,
     reducers: {
       updateCoins: (state, action) => {
+        if(state.coins.length > 1) return
         state.coins = action.payload
-        console.log('inside reducer')
       }
     }
 })
