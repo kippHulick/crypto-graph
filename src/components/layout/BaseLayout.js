@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from './Header';
-import { Container, Row, Col, Card } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import Carousel from './Carousel';
 
 

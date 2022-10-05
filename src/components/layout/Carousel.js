@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import AliceCarousel from 'react-alice-carousel'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { TrendingCoins } from '../../config/api'
 import { numberWithCommas } from '../CoinTable'
 import 'react-alice-carousel/lib/alice-carousel.css'

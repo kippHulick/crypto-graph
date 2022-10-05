@@ -11,7 +11,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import BaseLayout from './components/layout/BaseLayout';
 import CoinsReducer from './reducers/CoinReducer';
 
-import App from './components/App';
 import About from './components/About';
 import ExchangeReducer from './reducers/ExchangeReducer';
 import CoinPage from './components/CoinPage';

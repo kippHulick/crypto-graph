@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Container, Spinner, Table, Card } from 'react-bootstrap';
+import { Container, Spinner, Table } from 'react-bootstrap';
 import { Pagination } from '@material-ui/lab'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
